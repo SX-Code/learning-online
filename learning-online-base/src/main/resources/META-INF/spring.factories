@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.swx.base.config.LocalDateTimeConfig
+  com.swx.base.config.LocalDateTimeConfig, \
+  com.swx.base.config.Knife4jConfiguration

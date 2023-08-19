@@ -1,4 +1,4 @@
-package com.swx.content.config;
+package com.swx.base.config;
 
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.context.annotation.Bean;
@@ -32,8 +32,8 @@ public class Knife4jConfiguration {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("头条新闻API文档")
-                .description("头条新闻API文档")
+                .title("学成在线API文档")
+                .description("学成在线API文档")
                 .version("1.0")
                 .build();
     }
