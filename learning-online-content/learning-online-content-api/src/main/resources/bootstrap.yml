@@ -8,10 +8,13 @@ spring:
     name: content-api
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:///lo_content?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8&nullCatalogMeansCurrent=true
+    url: jdbc:mysql:///lo_content?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8&allowPublicKeyRetrieval=true
     username: root
     password: swx852345
 
 # 日志文件位置
 logging:
   config: classpath:log4j2-dev.xml
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.swx.content.model.po

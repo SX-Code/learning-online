@@ -5,6 +5,7 @@ import com.swx.base.model.PageParam;
 import com.swx.base.model.PageResult;
 import com.swx.content.model.dto.QueryCourseParamsDTO;
 import com.swx.content.model.po.CourseBase;
+import com.swx.content.service.CourseBaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -29,16 +30,16 @@ import java.util.Date;
 @RequestMapping("/course")
 public class CourseBaseInfoController {
 
+    private final CourseBaseService courseBaseService;
+
+    public CourseBaseInfoController(CourseBaseService courseBaseService) {
+        this.courseBaseService = courseBaseService;
+    }
+
     @ApiOperation("课程查询接口")
     @PostMapping("/list")
     public PageResult<CourseBase> list(PageParam pageParam, @RequestBody(required = false) QueryCourseParamsDTO dto) {
-        PageResult<CourseBase> courseBasePageResult = new PageResult<>();
-        ArrayList<CourseBase> courseBases = new ArrayList<>();
-        CourseBase courseBase = new CourseBase();
-        courseBase.setCreateDate(LocalDateTime.now());
-        courseBases.add(courseBase);
-        courseBasePageResult.setItems(courseBases);
-        return courseBasePageResult;
+        return courseBaseService.queryCourseBaseList(pageParam, dto);
     }
 
 }

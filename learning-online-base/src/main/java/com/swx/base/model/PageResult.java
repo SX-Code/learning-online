@@ -31,4 +31,11 @@ public class PageResult<T> implements Serializable {
         this.page = page;
         this.pageSize = pageSize;
     }
+
+    public PageResult(List<T> items, long counts, PageParam pageParam) {
+        this.items = items;
+        this.counts = counts;
+        this.page = pageParam.getPageNo();
+        this.pageSize = pageParam.getPageSize();
+    }
 }
