@@ -26,7 +26,7 @@ public class CourseMarket implements Serializable {
     /**
      * 主键，课程id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id")
     private Long id;
 
     /**

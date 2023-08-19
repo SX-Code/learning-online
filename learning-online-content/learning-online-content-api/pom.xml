@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.example</groupId>
+    <groupId>com.swx</groupId>
     <artifactId>learning-online-content-api</artifactId>
 
     <properties>

@@ -13,4 +13,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CourseMarketService extends IService<CourseMarket> {
 
+    /**
+     * 保存课程营销信息
+     *
+     * @param courseMarket 课程营销信息
+     * @return 是否保存成功
+     */
+    public boolean saveOrUpdateCourseMarket(CourseMarket courseMarket);
+
 }

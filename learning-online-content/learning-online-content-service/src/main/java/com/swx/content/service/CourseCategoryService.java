@@ -2,6 +2,9 @@ package com.swx.content.service;
 
 import com.swx.content.model.po.CourseCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.swx.content.model.vo.CourseCategoryTreeVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CourseCategoryService extends IService<CourseCategory> {
 
+    /**
+     * 查询课程分类信息
+     *
+     * @return 树形结构的分类信息
+     */
+    List<CourseCategoryTreeVO> treeNodes(String id);
 }

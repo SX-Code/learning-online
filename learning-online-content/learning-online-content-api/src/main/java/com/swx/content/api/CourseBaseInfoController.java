@@ -3,8 +3,10 @@ package com.swx.content.api;
 
 import com.swx.base.model.PageParam;
 import com.swx.base.model.PageResult;
+import com.swx.content.model.dto.AddCourseDTO;
 import com.swx.content.model.dto.QueryCourseParamsDTO;
 import com.swx.content.model.po.CourseBase;
+import com.swx.content.model.vo.CourseBaseInfoVO;
 import com.swx.content.service.CourseBaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,5 +44,11 @@ public class CourseBaseInfoController {
         return courseBaseService.queryCourseBaseList(pageParam, dto);
     }
 
+    @ApiOperation("新增课程")
+    @PostMapping("/course")
+    public CourseBaseInfoVO createCourseBase(@RequestBody AddCourseDTO dto) {
+        Long companyId = 1232141425L;
+        return courseBaseService.createCourseBase(companyId, dto);
+    }
 }
 
