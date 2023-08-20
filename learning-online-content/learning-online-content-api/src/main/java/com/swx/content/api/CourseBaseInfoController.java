@@ -6,6 +6,7 @@ import com.swx.base.exception.ValidationGroup;
 import com.swx.base.model.PageParam;
 import com.swx.base.model.PageResult;
 import com.swx.content.model.dto.AddCourseDTO;
+import com.swx.content.model.dto.EditCourseDTO;
 import com.swx.content.model.dto.QueryCourseParamsDTO;
 import com.swx.content.model.po.CourseBase;
 import com.swx.content.model.vo.CourseBaseInfoVO;
@@ -51,6 +52,20 @@ public class CourseBaseInfoController {
         // TODO 暂时使用固定值
         Long companyId = 1232141425L;
         return courseBaseService.createCourseBase(companyId, dto);
+    }
+
+    @ApiOperation("根据课程id查询接口")
+    @GetMapping("/{courseId}")
+    public CourseBaseInfoVO list(@PathVariable("courseId") Long courseId) {
+        return courseBaseService.getCourseBaseInfo(courseId);
+    }
+
+    @ApiOperation("修改课程")
+    @PutMapping("")
+    public CourseBaseInfoVO updateCourseBase(@RequestBody @Validated EditCourseDTO dto) {
+        // TODO 暂时使用固定值
+        Long companyId = 1232141425L;
+        return courseBaseService.updateCourseBase(companyId, dto);
     }
 }
 

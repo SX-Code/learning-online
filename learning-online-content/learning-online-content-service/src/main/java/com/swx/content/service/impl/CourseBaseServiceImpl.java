@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.swx.base.exception.BizException;
 import com.swx.base.model.PageParam;
 import com.swx.base.model.PageResult;
+import com.swx.base.model.ResultCodeEnum;
 import com.swx.content.model.dto.AddCourseDTO;
+import com.swx.content.model.dto.EditCourseDTO;
 import com.swx.content.model.dto.QueryCourseParamsDTO;
 import com.swx.content.model.po.CourseBase;
 import com.swx.content.mapper.CourseBaseMapper;
@@ -102,7 +104,8 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
      * @param courseId 课程ID
      * @return 课程信息
      */
-    public CourseBaseInfoVO getCourseBaseInfo(long courseId) {
+    @Override
+    public CourseBaseInfoVO getCourseBaseInfo(Long courseId) {
         // 查询基本信息
         CourseBase courseBase = getById(courseId);
         if (courseBase == null) {
@@ -120,5 +123,41 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         courseBaseInfoVO.setMtName(mtCategory == null ? "" : mtCategory.getName());
         courseBaseInfoVO.setStName(stCategory == null ? "" : stCategory.getName());
         return courseBaseInfoVO;
+    }
+
+    /**
+     * 更新课程信息
+     *
+     * @param companyId 公司ID
+     * @param dto       修改信息
+     * @return 更新后的课程详细信息
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CourseBaseInfoVO updateCourseBase(Long companyId, EditCourseDTO dto) {
+        CourseBase dbCourseBase = getById(dto.getId());
+        if (dbCourseBase == null) {
+            throw new BizException(ResultCodeEnum.DATA_NOT_EXIST);
+        }
+
+        if (!companyId.equals(dbCourseBase.getCompanyId())) {
+            throw new BizException("本机构只能修改本机构的课程");
+        }
+
+        BeanUtils.copyProperties(dto, dbCourseBase);
+        dbCourseBase.setCreateDate(LocalDateTime.now());
+        // TODO 添加修改人信息
+
+        // 更新课程信息
+        boolean updateBase = updateById(dbCourseBase);
+        // 更新营销信息
+        CourseMarket courseMarket = new CourseMarket();
+        BeanUtils.copyProperties(dto, courseMarket);
+        boolean updateMarket = courseMarketService.saveOrUpdateCourseMarket(courseMarket);
+
+        if (!updateBase || !updateMarket) {
+            throw new BizException("修改课程失败");
+        }
+        return getCourseBaseInfo(dbCourseBase.getId());
     }
 }
