@@ -1,5 +1,6 @@
 package com.swx.content.model.dto;
 
+import com.swx.base.exception.ValidationGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -1,5 +1,6 @@
 package com.swx.content.service.impl;
 
+import com.swx.base.exception.BizException;
 import com.swx.content.model.po.CourseMarket;
 import com.swx.content.mapper.CourseMarketMapper;
 import com.swx.content.service.CourseMarketService;
@@ -31,11 +32,11 @@ public class CourseMarketServiceImpl extends ServiceImpl<CourseMarketMapper, Cou
     public boolean saveOrUpdateCourseMarket(CourseMarket courseMarket) {
         String charge = courseMarket.getCharge();
         if (StringUtils.isEmpty(charge)) {
-            throw new RuntimeException("收费规则为空");
+            throw new BizException("收费规则为空");
         }
         if (charge.equals("201001")) {
             if (courseMarket.getPrice() == null || courseMarket.getPrice() <= 0) {
-                throw new RuntimeException("课程的价格不能为空且必须大于0");
+                throw new BizException("课程的价格不能为空且必须大于0");
             }
         }
         CourseMarket dbMarket = getById(courseMarket.getId());

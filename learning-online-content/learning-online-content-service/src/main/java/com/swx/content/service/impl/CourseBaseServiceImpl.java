@@ -3,6 +3,7 @@ package com.swx.content.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.swx.base.exception.BizException;
 import com.swx.base.model.PageParam;
 import com.swx.base.model.PageResult;
 import com.swx.content.model.dto.AddCourseDTO;
@@ -82,7 +83,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         courseBase.setAuditStatus("202002");
         boolean save = save(courseBase);
         if (!save) {
-            throw new RuntimeException("添加课程失败");
+            throw new BizException("添加课程失败");
         }
 
         // 新增course_market数据

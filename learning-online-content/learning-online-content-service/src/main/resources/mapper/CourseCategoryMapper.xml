@@ -3,7 +3,7 @@
 <mapper namespace="com.swx.content.mapper.CourseCategoryMapper">
 
     <select id="selectTreeNodes" parameterType="string" resultType="com.swx.content.model.po.CourseCategory">
-        WITH RECURSIVE t1 as (
+        WITH RECURSIVE t1 AS (
             SELECT c1.* FROM course_category c1 WHERE id = #{id}
             UNION ALL
             SELECT c2.* FROM course_category c2 INNER JOIN t1 ON t1.id = c2.parentid

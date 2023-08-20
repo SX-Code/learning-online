@@ -1,5 +1,6 @@
 package com.swx.system.api;
 
+import com.swx.base.exception.ResponseResult;
 import com.swx.system.model.po.Dictionary;
 import com.swx.system.service.DictionaryService;
 import io.swagger.annotations.Api;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Api("系统字典接口类")
 @RestController
+@ResponseResult
 @RequestMapping("/dictionary")
 public class DictionaryController {
 

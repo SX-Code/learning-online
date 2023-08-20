@@ -1,6 +1,7 @@
 package com.swx.content.api;
 
 
+import com.swx.base.exception.ResponseResult;
 import com.swx.content.model.vo.CourseCategoryTreeVO;
 import com.swx.content.service.CourseCategoryService;
 import io.swagger.annotations.Api;
@@ -21,6 +22,7 @@ import java.util.List;
  */
 @Api(value = "课程分类信息管理接口")
 @RestController
+@ResponseResult
 @RequestMapping("/course-category")
 public class CourseCategoryController {
 

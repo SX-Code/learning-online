@@ -1,6 +1,8 @@
 package com.swx.content.api;
 
 
+import com.swx.base.exception.ResponseResult;
+import com.swx.base.exception.ValidationGroup;
 import com.swx.base.model.PageParam;
 import com.swx.base.model.PageResult;
 import com.swx.content.model.dto.AddCourseDTO;
@@ -10,10 +12,8 @@ import com.swx.content.model.vo.CourseBaseInfoVO;
 import com.swx.content.service.CourseBaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ import java.util.List;
  */
 @Api(value = "课程基本信息管理接口")
 @RestController
+@ResponseResult
 @RequestMapping("/course")
 public class CourseBaseInfoController {
 
@@ -45,8 +46,9 @@ public class CourseBaseInfoController {
     }
 
     @ApiOperation("新增课程")
-    @PostMapping("/course")
-    public CourseBaseInfoVO createCourseBase(@RequestBody AddCourseDTO dto) {
+    @PostMapping("")
+    public CourseBaseInfoVO createCourseBase(@RequestBody @Validated(ValidationGroup.Insert.class) AddCourseDTO dto) {
+        // TODO 暂时使用固定值
         Long companyId = 1232141425L;
         return courseBaseService.createCourseBase(companyId, dto);
     }
