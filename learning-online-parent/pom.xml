@@ -12,6 +12,8 @@
 		<module>../learning-online-content</module>
 		<module>../learning-online-generator</module>
 		<module>../learning-online-system</module>
+		<module>../learning-online-gateway</module>
+		<module>../learning-online-media</module>
 	</modules>
 	<properties>
 		<java.version>11</java.version>
