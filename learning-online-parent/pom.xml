@@ -21,6 +21,7 @@
 		<lombok.version>1.18.18</lombok.version>
 		<mysql.connector.version>8.0.23</mysql.connector.version>
 		<knife4j.version>3.0.3</knife4j.version>
+		<spring-cloud-alibaba.version>2.2.5.RELEASE</spring-cloud-alibaba.version>
 	</properties>
 
 	<dependencyManagement>
@@ -29,6 +30,13 @@
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
 				<version>${spring.cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba.cloud</groupId>
+				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
+				<version>${spring-cloud-alibaba.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

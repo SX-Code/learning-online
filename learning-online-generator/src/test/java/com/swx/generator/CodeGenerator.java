@@ -29,7 +29,6 @@ public class CodeGenerator {
         gc.setFileOverride(false); // 是否覆盖
         gc.setServiceName("%sService"); // 去Service的I前缀
         gc.setIdType(IdType.AUTO); // 主键策略
-        gc.setDateType(DateType.ONLY_DATE); // 定义生成的实体类中日期类型
         mpg.setGlobalConfig(gc);
 
         // 数据源配置

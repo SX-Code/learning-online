@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("teachplan_media")
-public class TeachplanMedia implements Serializable {
+public class TeachPlanMedia implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

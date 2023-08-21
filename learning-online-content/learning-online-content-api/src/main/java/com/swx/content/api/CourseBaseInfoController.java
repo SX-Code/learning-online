@@ -28,7 +28,7 @@ import java.util.List;
  * @author sw-code
  * @since 2023-08-18
  */
-@Api(value = "课程基本信息管理接口")
+@Api(value = "课程基本信息管理接口", tags = "课程基本信息管理接口")
 @RestController
 @ResponseResult
 @RequestMapping("/course")

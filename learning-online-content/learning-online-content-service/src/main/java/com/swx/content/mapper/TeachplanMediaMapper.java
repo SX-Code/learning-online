@@ -1,6 +1,6 @@
 package com.swx.content.mapper;
 
-import com.swx.content.model.po.TeachplanMedia;
+import com.swx.content.model.po.TeachPlanMedia;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author sw-code
  * @since 2023-08-18
  */
-public interface TeachplanMediaMapper extends BaseMapper<TeachplanMedia> {
+public interface TeachplanMediaMapper extends BaseMapper<TeachPlanMedia> {
 
 }

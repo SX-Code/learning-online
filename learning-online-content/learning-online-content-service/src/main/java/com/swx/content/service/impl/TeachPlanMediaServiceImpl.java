@@ -1,10 +1,13 @@
 package com.swx.content.service.impl;
 
-import com.swx.content.model.po.TeachplanMedia;
+import com.swx.content.model.po.TeachPlanMedia;
 import com.swx.content.mapper.TeachplanMediaMapper;
-import com.swx.content.service.TeachplanMediaService;
+import com.swx.content.model.vo.TeachPlanVO;
+import com.swx.content.service.TeachPlanMediaService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
  * @since 2023-08-18
  */
 @Service
-public class TeachplanMediaServiceImpl extends ServiceImpl<TeachplanMediaMapper, TeachplanMedia> implements TeachplanMediaService {
+public class TeachPlanMediaServiceImpl extends ServiceImpl<TeachplanMediaMapper, TeachPlanMedia> implements TeachPlanMediaService {
+
 
 }

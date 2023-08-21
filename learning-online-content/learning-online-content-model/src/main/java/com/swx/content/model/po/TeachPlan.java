@@ -2,6 +2,8 @@ package com.swx.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -20,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("teachplan")
-public class Teachplan implements Serializable {
+public class TeachPlan implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -109,13 +111,12 @@ public class Teachplan implements Serializable {
      * 创建时间
      */
     @TableField("create_date")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     /**
      * 修改时间
      */
     @TableField("change_date")
-    private Date changeDate;
-
+    private LocalDateTime changeDate;
 
 }

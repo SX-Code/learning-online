@@ -145,7 +145,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         }
 
         BeanUtils.copyProperties(dto, dbCourseBase);
-        dbCourseBase.setCreateDate(LocalDateTime.now());
+        dbCourseBase.setChangeDate(LocalDateTime.now());
         // TODO 添加修改人信息
 
         // 更新课程信息
