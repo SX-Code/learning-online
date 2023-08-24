@@ -27,7 +27,7 @@ public class MediaFiles implements Serializable {
     /**
      * 文件id,md5值
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id")
     private String id;
 
     /**

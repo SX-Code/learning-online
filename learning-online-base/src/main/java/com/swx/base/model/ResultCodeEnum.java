@@ -16,6 +16,7 @@ public enum ResultCodeEnum {
     /* 数据错误 1000~2000 */
     DATA_EXIST(1000, "数据已经存在"),
     DATA_NOT_EXIST(1001, "数据不存在"),
+    DATA_SAVE_FAIL(1002, "数据保存失败"),
     /* 数据错误 300~3500 */
     NO_OPERATOR_AUTH(3000, "无权操作"),
     NEED_ADMIN(3001, "需要管理员权限");
