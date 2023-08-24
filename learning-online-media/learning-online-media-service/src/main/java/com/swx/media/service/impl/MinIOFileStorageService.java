@@ -4,6 +4,8 @@ import com.swx.media.config.MinIOConfig;
 import com.swx.media.config.MinIOConfigProperties;
 import com.swx.media.service.FileStorageService;
 import io.minio.*;
+import io.minio.errors.*;
+import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +19,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -194,6 +198,7 @@ public class MinIOFileStorageService implements FileStorageService {
      * @param chunkTotal  分块数量
      */
     @Override
+    @Async
     public void clearChunkFiles(String chunkFolder, int chunkTotal) {
         // 构建清理item
         List<DeleteObject> objects = Stream.iterate(0, i -> ++i).limit(chunkTotal)
@@ -204,6 +209,17 @@ public class MinIOFileStorageService implements FileStorageService {
                 .objects(objects)
                 .build();
         // 清理文件
-        minioClient.removeObjects(removeObjectsArgs);
+        Iterable<Result<DeleteError>> results = minioClient.removeObjects(removeObjectsArgs);
+        // 需要迭代返回的可迭代来执行删除。
+        for (Result<DeleteError> result : results) {
+            DeleteError error = null;
+            try {
+                error = result.get();
+                log.info("Error in deleting object {}; {}", error.objectName(), error.message());
+            } catch (Exception e) {
+                log.error("清理文件出错", e);
+            }
+
+        }
     }
 }

@@ -248,25 +248,6 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         return R.success(true);
     }
 
-    /**
-     * 从网络流中获取文件大小
-     * @param mergeVideo 网络流
-     * @return 文件大小
-     */
-    private long getSizeFromNetworkStream(InputStream mergeVideo) {
-
-        try {
-            int count = 0;
-            while (count == 0) {
-                count = mergeVideo.available();
-            }
-            byte[] bytes = new byte[count];
-            mergeVideo.read(bytes);
-            return mergeVideo.available();
-        } catch (IOException e) {
-            return 0L;
-        }
-    }
 
     private String getMineType(String suffix) {
         if (suffix == null) suffix = "";
