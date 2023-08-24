@@ -3,19 +3,24 @@ package com.swx.media.service.impl;
 import com.swx.media.config.MinIOConfig;
 import com.swx.media.config.MinIOConfigProperties;
 import com.swx.media.service.FileStorageService;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
+import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @EnableConfigurationProperties(MinIOConfigProperties.class)
@@ -25,7 +30,6 @@ public class MinIOFileStorageService implements FileStorageService {
 
     private final MinioClient minioClient;
     private final MinIOConfigProperties minIOConfigProperties;
-
     private final static String separator = "/";
 
     public MinIOFileStorageService(MinioClient minioClient, MinIOConfigProperties minIOConfigProperties) {
@@ -81,32 +85,125 @@ public class MinIOFileStorageService implements FileStorageService {
     }
 
     /**
-     * 上传html文件
+     * 上传视频分块文件
      *
-     * @param prefix      文件前缀
-     * @param filename    文件名
+     * @param path        文件名
      * @param inputStream 文件流
      * @return 文件全路径
      */
     @Override
-    public String uploadHtmlFile(String prefix, String filename, InputStream inputStream) {
-        String filePath = builderFilePath(prefix, filename);
+    public String uploadChunkFile(String path, String mimeType, InputStream inputStream) {
         try {
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
-                    .object(filePath)
-                    .contentType("text/html")
-                    .bucket(minIOConfigProperties.getBucket().get("video")).stream(inputStream, inputStream.available(), -1)
+                    .object(path)
+                    .bucket(minIOConfigProperties.getBucket().get("video"))
+                    .stream(inputStream, inputStream.available(), -1)
+                    .contentType(mimeType)
                     .build();
             minioClient.putObject(putObjectArgs);
-            StringBuilder urlPath = new StringBuilder(minIOConfigProperties.getEndpoint());
-            urlPath.append(separator + minIOConfigProperties.getBucket());
-            urlPath.append(separator);
-            urlPath.append(filePath);
-            return urlPath.toString();
+            return path;
         } catch (Exception ex) {
             log.error("minio put file error.", ex);
-            ex.printStackTrace();
             throw new RuntimeException("上传文件失败");
         }
+    }
+
+    /**
+     * 合并文件
+     *
+     * @param folder    分片目录路径
+     * @param filepath  合并文件路径
+     * @param chunkSize 分片数量
+     * @return bucket
+     */
+    @Override
+    public void mergeFile(String folder, String filepath, int chunkSize) throws Exception {
+        try {
+            String bucket = minIOConfigProperties.getBucket().get("video");
+            // 源文件
+            List<ComposeSource> sources = Stream.iterate(0, i -> ++i).limit(chunkSize)
+                    .map(i -> ComposeSource.builder().bucket(bucket).object(folder + i).build()).collect(Collectors.toList());
+            // 合并
+            ComposeObjectArgs composeObjectArgs = ComposeObjectArgs.builder()
+                    .object(filepath)
+                    .bucket(bucket)
+                    .sources(sources)
+                    .build();
+            minioClient.composeObject(composeObjectArgs);
+        } catch (Exception ex) {
+            log.error("minio compose file error.", ex);
+            throw new Exception("合并文件失败");
+        }
+    }
+
+    /**
+     * 获取文件信息
+     *
+     * @param bucket   桶
+     * @param filepath 文件路径
+     * @return 文件信息
+     */
+    @Override
+    public ObjectStat getObjectStat(String bucket, String filepath) {
+        try {
+            return minioClient.statObject(
+                    StatObjectArgs.builder().bucket("video").object(filepath).build());
+        } catch (Exception e) {
+            log.error("文件信息获取失败, 桶: {}, 文件路径: {}", bucket, filepath, e);
+            return null;
+        }
+    }
+
+    /**
+     * 获取一个文件
+     *
+     * @param bucket 桶
+     * @param path   文件路径
+     */
+    @Override
+    public File downloadFile(String bucket, String path) {
+        FileOutputStream outputStream = null;
+        try {
+            GetObjectArgs getObjectArgs = GetObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(path)
+                    .build();
+            InputStream ioStream = minioClient.getObject(getObjectArgs);
+            File minioTempFile = File.createTempFile("minio", ".merge");
+            outputStream = new FileOutputStream(minioTempFile);
+            IOUtils.copy(ioStream, outputStream);
+            return minioTempFile;
+        } catch (Exception ex) {
+            log.error("minio compose file error.", ex);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    log.error("文件输出流关闭失败", e);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 清理分块文件
+     *
+     * @param chunkFolder 分块目录
+     * @param chunkTotal  分块数量
+     */
+    @Override
+    public void clearChunkFiles(String chunkFolder, int chunkTotal) {
+        // 构建清理item
+        List<DeleteObject> objects = Stream.iterate(0, i -> ++i).limit(chunkTotal)
+                .map(i -> new DeleteObject(chunkFolder.concat(Integer.toString(i)))).collect(Collectors.toList());
+
+        RemoveObjectsArgs removeObjectsArgs = RemoveObjectsArgs.builder()
+                .bucket(minIOConfigProperties.getBucket().get("video"))
+                .objects(objects)
+                .build();
+        // 清理文件
+        minioClient.removeObjects(removeObjectsArgs);
     }
 }

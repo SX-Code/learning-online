@@ -1,5 +1,9 @@
 package com.swx.media.service;
 
+import com.swx.base.model.PageParam;
+import com.swx.base.model.PageResult;
+import com.swx.base.model.R;
+import com.swx.media.model.dto.QueryMediaParamsDTO;
 import com.swx.media.model.dto.UploadFileParamDTO;
 import com.swx.media.model.po.MediaFiles;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -15,6 +19,16 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 2023-08-21
  */
 public interface MediaFilesService extends IService<MediaFiles> {
+
+    /**
+     * 查询所有符合条件的媒资信息
+     *
+     * @param companyId 机构ID
+     * @param pageParam 分页参数
+     * @param dto       查询参数
+     * @return PageResult<MediaFiles>
+     */
+    PageResult<MediaFiles> queryMediaFiles(Long companyId, PageParam pageParam, QueryMediaParamsDTO dto);
 
     /**
      * 上传文件
@@ -44,4 +58,39 @@ public interface MediaFilesService extends IService<MediaFiles> {
      */
     public MediaFiles saveAfterStore(UploadFileParamDTO dto, Long companyId, String prefix, String bucket, String path);
 
+    /**
+     * 检查文件是否存在
+     *
+     * @param fileMd5 文件md5值
+     * @return false不存在，true存在
+     */
+    Boolean checkFile(String fileMd5);
+
+    /**
+     * 检查文件分块是否存在
+     *
+     * @param fileMd5 文件md5
+     * @param chunk   分块序号
+     * @return false不存在，true存在
+     */
+    Boolean checkChunk(String fileMd5, int chunk);
+
+    /**
+     * 上传分块
+     *
+     * @param file    文件信息
+     * @param fileMd5 文件md5
+     * @param chunk   分块序号
+     */
+    Boolean uploadChunk(MultipartFile file, String fileMd5, int chunk);
+
+    /**
+     * 合并分块
+     *
+     * @param companyId  机构ID
+     * @param fileMd5    文件md5
+     * @param chunkTotal 分块数量
+     * @param dto   文件信息
+     */
+    R mergeChunks(Long companyId, String fileMd5, int chunkTotal, UploadFileParamDTO dto);
 }

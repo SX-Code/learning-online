@@ -64,6 +64,14 @@ public class R implements Serializable {
         return result;
     }
     // 返回失败
+    public static R fail(Object data, String message) {
+        R result = new R();
+        result.setCode(ResultCodeEnum.SERVER_ERROR.code());
+        result.setData(data);
+        result.setMessage(message);
+        return result;
+    }
+    // 返回失败
     public static R fail(ResultCodeEnum resultCode) {
         R result = new R();
         result.setResultCode(resultCode);

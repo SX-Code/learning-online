@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@MapperScan("com.swx.media.mapper")
 @EnableTransactionManagement
 public class MediaApplication {
     public static void main(String[] args) {
