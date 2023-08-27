@@ -9,7 +9,6 @@ import java.util.Map;
 @Data
 @ConfigurationProperties(prefix = "minio")  // 文件上传 配置前缀file.oss
 public class MinIOConfigProperties implements Serializable {
-
     private String accessKey;
     private String secretKey;
     private String endpoint;

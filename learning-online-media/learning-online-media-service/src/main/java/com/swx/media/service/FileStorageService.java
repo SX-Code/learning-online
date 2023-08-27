@@ -19,6 +19,15 @@ public interface FileStorageService {
     public Map<String, String> uploadMediaFile(String prefix, String filename, String mineType, InputStream inputStream);
 
     /**
+     * 上传图片文件
+     *
+     * @param objectName  MinIO文件名
+     * @param mineType    文件类型
+     * @param inputStream 文件流
+     */
+    public boolean uploadVideoFile(String objectName, String mineType, InputStream inputStream);
+
+    /**
      * 上传视频分块文件
      *
      * @param path        文件路径
@@ -47,8 +56,9 @@ public interface FileStorageService {
 
     /**
      * 获取一个文件
+     *
      * @param bucket 桶
-     * @param path 路径
+     * @param path   路径
      * @return 文件流
      */
     public File downloadFile(String bucket, String path);

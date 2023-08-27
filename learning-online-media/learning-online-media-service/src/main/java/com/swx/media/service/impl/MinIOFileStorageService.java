@@ -89,6 +89,31 @@ public class MinIOFileStorageService implements FileStorageService {
     }
 
     /**
+     * 上传图片文件
+     *
+     * @param objectName  MinIO文件名
+     * @param mineType    文件类型
+     * @param inputStream 文件流
+     */
+    @Override
+    public boolean uploadVideoFile(String objectName, String mineType, InputStream inputStream) {
+        String bucket = minIOConfigProperties.getBucket().get("video");
+        try {
+            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    .object(objectName)
+                    .contentType(mineType)
+                    .bucket(bucket)
+                    .stream(inputStream, inputStream.available(), -1)
+                    .build();
+            minioClient.putObject(putObjectArgs);
+            return true;
+        } catch (Exception ex) {
+            log.error("minio put file error.", ex);
+        }
+        return false;
+    }
+
+    /**
      * 上传视频分块文件
      *
      * @param path        文件名

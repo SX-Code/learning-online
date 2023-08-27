@@ -16,13 +16,14 @@ import com.swx.media.model.dto.UploadFileParamDTO;
 import com.swx.media.model.enums.MediaFileStatusEnum;
 import com.swx.media.model.po.MediaFiles;
 import com.swx.media.mapper.MediaFilesMapper;
+import com.swx.media.model.po.MediaProcess;
 import com.swx.media.model.vo.UploadFileResultVO;
 import com.swx.media.service.FileStorageService;
 import com.swx.media.service.MediaFilesService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.swx.media.service.MediaProcessService;
 import io.minio.ObjectStat;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,6 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -52,12 +51,14 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
 
     private final FileStorageService fileStorageService;
     private final TransactionTemplate transactionTemplate;
-
+    private final MediaProcessService mediaProcessService;
     private final MinIOConfigProperties minIOConfigProperties;
 
-    public MediaFilesServiceImpl(FileStorageService fileStorageService, TransactionTemplate transactionTemplate, MinIOConfigProperties minIOConfigProperties) {
+    public MediaFilesServiceImpl(FileStorageService fileStorageService, TransactionTemplate transactionTemplate,
+                                 MediaProcessService mediaProcessService, MinIOConfigProperties minIOConfigProperties) {
         this.fileStorageService = fileStorageService;
         this.transactionTemplate = transactionTemplate;
+        this.mediaProcessService = mediaProcessService;
         this.minIOConfigProperties = minIOConfigProperties;
     }
 
@@ -143,11 +144,14 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         mediaFiles.setCreateDate(LocalDateTime.now());
         mediaFiles.setStatus(MediaFileStatusEnum.NORMAL.status());
         mediaFiles.setAuditStatus("002003");
+        // 保存到媒资文件表
         boolean save = save(mediaFiles);
         if (!save) {
             log.error("想数据库保存文件失败，bucket: {}，文件名: {}", bucket, path);
             return null;
         }
+        // 记录待处理任务
+        addWaitingTask(mediaFiles);
         return mediaFiles;
     }
 
@@ -246,6 +250,27 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         // 删除分块文件
         fileStorageService.clearChunkFiles(chunkFileFolderPath, chunkTotal);
         return R.success(true);
+    }
+
+    /**
+     * 添加文件转码待处理任务
+     * @param mediaFiles 文件信息
+     */
+    private void addWaitingTask(MediaFiles mediaFiles) {
+        // 获取文件的mimeType, 如果是avi视频，写入待处理任务
+        String filename = mediaFiles.getFilename();
+        String suffix = filename.substring(filename.lastIndexOf("."));
+        String mineType = getMineType(suffix);
+        if (!mineType.equals("video/x-msvideo")) {
+            return;
+        }
+        MediaProcess mediaProcess = new MediaProcess();
+        BeanUtils.copyProperties(mediaProcess, mediaFiles);
+        mediaProcess.setStatus("1");
+        mediaProcess.setCreateDate(LocalDateTime.now());
+        mediaProcess.setFailCount(0);
+        mediaProcess.setUrl(null);
+        mediaProcessService.save(mediaProcess);
     }
 
 

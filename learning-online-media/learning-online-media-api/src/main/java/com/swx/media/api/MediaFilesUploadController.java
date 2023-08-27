@@ -2,11 +2,8 @@ package com.swx.media.api;
 
 
 import com.swx.base.exception.ResponseResult;
-import com.swx.base.model.PageParam;
-import com.swx.base.model.PageResult;
 import com.swx.base.model.R;
 import com.swx.media.model.dto.UploadFileParamDTO;
-import com.swx.media.model.po.MediaFiles;
 import com.swx.media.model.vo.UploadFileResultVO;
 import com.swx.media.service.MediaFilesService;
 import io.swagger.annotations.Api;

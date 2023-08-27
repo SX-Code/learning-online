@@ -49,6 +49,16 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- 分布式任务调度 xxJob -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+        </dependency>
+        <!-- FFmpeg -->
+        <dependency>
+            <groupId>ws.schild</groupId>
+            <artifactId>jave-all-deps</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

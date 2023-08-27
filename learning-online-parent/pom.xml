@@ -27,6 +27,8 @@
         <minio.version>7.1.0</minio.version>
         <okhttp.version>4.8.1</okhttp.version>
         <simplemagic.version>1.17</simplemagic.version>
+        <xxjob-core.version>2.3.0</xxjob-core.version>
+        <ws.schild.version>3.3.1</ws.schild.version>
     </properties>
 
     <dependencyManagement>
@@ -91,7 +93,18 @@
                 <artifactId>simplemagic</artifactId>
                 <version>${simplemagic.version}</version>
             </dependency>
-
+            <!-- 分布式任务调度 xxJob -->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxjob-core.version}</version>
+            </dependency>
+            <!--FFmpeg-->
+            <dependency>
+                <groupId>ws.schild</groupId>
+                <artifactId>jave-all-deps</artifactId>
+                <version>${ws.schild.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
