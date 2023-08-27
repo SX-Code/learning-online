@@ -1,11 +1,14 @@
 package com.swx.content.api;
 
 import com.swx.base.exception.ResponseResult;
+import com.swx.content.model.dto.BindTeachPlanMediaDTO;
 import com.swx.content.model.dto.TeachPlanDTO;
+import com.swx.content.model.po.TeachPlanMedia;
 import com.swx.content.model.vo.TeachPlanVO;
 import com.swx.content.service.TeachPlanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,5 +43,11 @@ public class TeachPlanController {
     @PostMapping("")
     public void saveTeachPlan(@RequestBody TeachPlanDTO dto) {
         teachPlanService.saveTeachPlan(dto);
+    }
+
+    @ApiOperation("课程计划和媒资信息绑定")
+    @PostMapping("/association/media")
+    public TeachPlanMedia associateMedia(@RequestBody @Validated BindTeachPlanMediaDTO dto) {
+        return teachPlanService.associationMedia(dto);
     }
 }

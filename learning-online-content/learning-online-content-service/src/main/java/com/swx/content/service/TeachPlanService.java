@@ -1,8 +1,10 @@
 package com.swx.content.service;
 
+import com.swx.content.model.dto.BindTeachPlanMediaDTO;
 import com.swx.content.model.dto.TeachPlanDTO;
 import com.swx.content.model.po.TeachPlan;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.swx.content.model.po.TeachPlanMedia;
 import com.swx.content.model.vo.TeachPlanVO;
 
 import java.util.List;
@@ -31,5 +33,12 @@ public interface TeachPlanService extends IService<TeachPlan> {
      * @param dto 课程计划
      */
     public void saveTeachPlan(TeachPlanDTO dto);
+
+    /**
+     * 课程计划和媒资信息绑定
+     *
+     * @param dto 绑定信息
+     */
+    public TeachPlanMedia associationMedia(BindTeachPlanMediaDTO dto);
 
 }

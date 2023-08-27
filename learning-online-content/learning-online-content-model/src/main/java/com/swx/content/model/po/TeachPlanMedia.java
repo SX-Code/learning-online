@@ -2,6 +2,8 @@ package com.swx.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -55,7 +57,7 @@ public class TeachPlanMedia implements Serializable {
     private String mediaFilename;
 
     @TableField("create_date")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     /**
      * 创建人

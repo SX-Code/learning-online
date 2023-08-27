@@ -4,16 +4,21 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.swx.base.exception.BizException;
 import com.swx.base.model.ResultCodeEnum;
 import com.swx.content.mapper.TeachPlanMapper;
+import com.swx.content.model.dto.BindTeachPlanMediaDTO;
 import com.swx.content.model.dto.TeachPlanDTO;
 import com.swx.content.model.po.TeachPlan;
+import com.swx.content.model.po.TeachPlanMedia;
 import com.swx.content.model.vo.TeachPlanVO;
+import com.swx.content.service.TeachPlanMediaService;
 import com.swx.content.service.TeachPlanService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -25,6 +30,12 @@ import java.util.List;
  */
 @Service
 public class TeachPlanServiceImpl extends ServiceImpl<TeachPlanMapper, TeachPlan> implements TeachPlanService {
+
+    private final TeachPlanMediaService teachPlanMediaService;
+
+    public TeachPlanServiceImpl(TeachPlanMediaService teachPlanMediaService) {
+        this.teachPlanMediaService = teachPlanMediaService;
+    }
 
     /**
      * 查询课程计划树形结构
@@ -66,5 +77,30 @@ public class TeachPlanServiceImpl extends ServiceImpl<TeachPlanMapper, TeachPlan
         BeanUtils.copyProperties(dto, teachPlan);
         teachPlan.setChangeDate(LocalDateTime.now());
         updateById(teachPlan);
+    }
+
+    /**
+     * 课程计划和媒资信息绑定
+     *
+     * @param dto 绑定信息
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public TeachPlanMedia associationMedia(BindTeachPlanMediaDTO dto) {
+        TeachPlan dbTeachPlan = Optional.ofNullable(getById(dto.getTeachplanId())).orElseThrow(() -> new BizException(ResultCodeEnum.DATA_NOT_EXIST));
+        if (dbTeachPlan.getGrade() != 2) {
+            throw new BizException("只允许第二级教学计划绑定媒资文件");
+        }
+        // 删除原有记录，根据课程计划ID删除其绑定的媒资
+        teachPlanMediaService.remove(Wrappers.<TeachPlanMedia>lambdaQuery().eq(TeachPlanMedia::getTeachplanId, dto.getTeachplanId()));
+        // 新增记录
+        TeachPlanMedia teachPlanMedia = new TeachPlanMedia();
+        teachPlanMedia.setMediaId(dto.getMediaId());
+        teachPlanMedia.setMediaFilename(dto.getFileName());
+        teachPlanMedia.setTeachplanId(dto.getTeachplanId());
+        teachPlanMedia.setCreateDate(LocalDateTime.now());
+        teachPlanMedia.setCourseId(dbTeachPlan.getCourseId());
+        teachPlanMediaService.save(teachPlanMedia);
+        return teachPlanMedia;
     }
 }

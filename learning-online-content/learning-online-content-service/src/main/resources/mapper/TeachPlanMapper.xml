@@ -56,7 +56,7 @@
                tm.id             teachPlanMediaId,
                tm.media_id       mediaId
         FROM teachplan one
-                 INNER JOIN teachplan two ON one.id = two.parentid
+                 LEFT JOIN teachplan two ON one.id = two.parentid
                  LEFT JOIN teachplan_media tm on two.id = tm.teachplan_id
         WHERE one.parentid = 0
           AND one.course_id = #{courseId}
