@@ -24,7 +24,7 @@
             <result column="two_courseId" property="courseId" />
             <result column="two_coursePubId" property="coursePubId" />
             <!-- 映射子节点，一对一映射 -->
-            <association property="teachPlanMedia" javaType="com.swx.content.model.po.TeachPlanMedia">
+            <association property="teachplanMedia" javaType="com.swx.content.model.po.TeachPlanMedia">
                 <id column="teachPlanMediaId" property="id" />
                 <result column="mediaFilename" property="mediaFilename" />
                 <result column="mediaId" property="mediaId" />

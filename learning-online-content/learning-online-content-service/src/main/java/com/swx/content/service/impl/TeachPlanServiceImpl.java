@@ -96,8 +96,8 @@ public class TeachPlanServiceImpl extends ServiceImpl<TeachPlanMapper, TeachPlan
         // 新增记录
         TeachPlanMedia teachPlanMedia = new TeachPlanMedia();
         teachPlanMedia.setMediaId(dto.getMediaId());
-        teachPlanMedia.setMediaFilename(dto.getFileName());
         teachPlanMedia.setTeachplanId(dto.getTeachplanId());
+        teachPlanMedia.setMediaFilename(dto.getFileName());
         teachPlanMedia.setCreateDate(LocalDateTime.now());
         teachPlanMedia.setCourseId(dbTeachPlan.getCourseId());
         teachPlanMediaService.save(teachPlanMedia);

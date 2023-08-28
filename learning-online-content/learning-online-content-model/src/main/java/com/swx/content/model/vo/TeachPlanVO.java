@@ -14,7 +14,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class TeachPlanVO extends TeachPlan {
 
-    private TeachPlanMedia teachPlanMedia;
+    private TeachPlanMedia teachplanMedia;
     private List<TeachPlanVO> teachPlanTreeNodes;
 
 }
