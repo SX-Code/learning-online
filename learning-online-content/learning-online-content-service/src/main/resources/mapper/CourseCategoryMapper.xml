@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swx.content.mapper.CourseCategoryMapper">
+
+    <select id="selectTreeNodes" parameterType="string" resultType="com.swx.content.model.po.CourseCategory">
+        WITH RECURSIVE t1 AS (
+            SELECT c1.* FROM course_category c1 WHERE id = #{id}
+            UNION ALL
+            SELECT c2.* FROM course_category c2 INNER JOIN t1 ON t1.id = c2.parentid
+        )
+        SELECT * FROM t1
+        order by t1.id
+    </select>
+</mapper>
