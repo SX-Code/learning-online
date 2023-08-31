@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
+    com.swx.messagesdk.config.MybatisPlusConfig, \
+    com.swx.messagesdk.service.impl.MqMessageHistoryServiceImpl, \
+    com.swx.messagesdk.service.impl.MqMessageServiceImpl \
+  

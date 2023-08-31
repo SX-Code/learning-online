@@ -1,15 +1,15 @@
 package com.swx.content.api;
 
-import com.swx.content.model.vo.CoursePreviewVO;
+import com.swx.base.exception.ResponseResult;
+import com.swx.base.model.R;
 import com.swx.content.service.CoursePublishService;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.ModelAndView;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
-
-@Controller
+@Api(value = "课程发布审核接口", tags = "课程发布审核接口")
+@ResponseResult
+@RestController
 public class CoursePublishController {
 
     private final CoursePublishService coursePublishService;
@@ -18,12 +18,18 @@ public class CoursePublishController {
         this.coursePublishService = coursePublishService;
     }
 
-    @GetMapping("/coursepreview/{courseId}")
-    public ModelAndView preview(@PathVariable("courseId") @NotNull(message = "课程ID不能为空") Long courseId) {
-        ModelAndView data = new ModelAndView();
-        CoursePreviewVO previewInfo = coursePublishService.getCoursePreviewInfo(courseId);
-        data.addObject("model", previewInfo);
-        data.setViewName("course_template");
-        return data;
+    @ApiOperation("提交审核")
+    @PostMapping("/courseaudit/commit/{courseId}")
+    public void commitAudit(@PathVariable("courseId") Long courseId) {
+        Long companyId = 1232141425L;
+        coursePublishService.commitAudit(companyId, courseId);
     }
+
+    @ApiOperation("课程发布")
+    @PostMapping("/coursepublish/{courseId}")
+    public void coursePublish(@PathVariable("courseId") Long courseId) {
+        Long companyId = 1232141425L;
+        coursePublishService.publish(companyId, courseId);
+    }
+
 }

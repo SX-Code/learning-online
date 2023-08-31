@@ -28,12 +28,12 @@ public class CodeGenerator {
         gc.setOpen(false); // 是否打开文件资源管理器
         gc.setFileOverride(false); // 是否覆盖
         gc.setServiceName("%sService"); // 去Service的I前缀
-        gc.setIdType(IdType.AUTO); // 主键策略
+        gc.setIdType(IdType.NONE); // 主键策略
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql:///lo_media?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8&nullCatalogMeansCurrent=true");
+        dsc.setUrl("jdbc:mysql:///lo_content?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8&nullCatalogMeansCurrent=true");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
@@ -42,7 +42,7 @@ public class CodeGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.swx.media");
+        pc.setParent("com.swx.content");
         pc.setEntity("model.po");
         pc.setMapper("mapper");
         pc.setService("service");
@@ -51,7 +51,7 @@ public class CodeGenerator {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("media_process_history");
+        strategy.setInclude("mq_message", "mq_message_history");
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);

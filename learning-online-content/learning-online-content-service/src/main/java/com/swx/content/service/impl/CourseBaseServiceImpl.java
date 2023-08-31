@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * <p>
@@ -112,10 +113,10 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
             return null;
         }
         // 查询营销信息
-        CourseMarket courseMarket = courseMarketService.getById(courseId);
+        CourseMarket courseMarket = Optional.ofNullable(courseMarketService.getById(courseId)).orElse(new CourseMarket());
         CourseBaseInfoVO courseBaseInfoVO = new CourseBaseInfoVO();
-        BeanUtils.copyProperties(courseBase, courseBaseInfoVO);
         BeanUtils.copyProperties(courseMarket, courseBaseInfoVO);
+        BeanUtils.copyProperties(courseBase, courseBaseInfoVO);
 
         // 查询分类信息
         CourseCategory mtCategory = courseCategoryService.getById(courseBase.getMt());

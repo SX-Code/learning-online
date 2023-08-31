@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: search
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 124.221.23.47:8848
+        namespace: learning-online-dev
+        group: learning-online-project
+      config:
+        server-addr: 124.221.23.47:8848
+        namespace: learning-online-dev
+        group: learning-online-project
+        file-extension: yaml
+        refresh-enabled: true
+        shared-configs:
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: learning-online-common
+            refresh: true
+  profiles:
+    active: dev

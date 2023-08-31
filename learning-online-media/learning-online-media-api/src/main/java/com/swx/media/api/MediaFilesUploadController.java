@@ -35,13 +35,13 @@ public class MediaFilesUploadController {
 
     @ApiOperation("上传文件")
     @PostMapping(value = "/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadFileResultVO uploadImage(@RequestPart("filedata") MultipartFile filedata) {
+    public UploadFileResultVO upload(@RequestPart("filedata") MultipartFile filedata,
+                                          @RequestParam(value = "objectName", required = false) String objectName) {
         Long companyId = 1232141425L;
         UploadFileParamDTO dto = new UploadFileParamDTO();
         dto.setFilename(filedata.getOriginalFilename());
         dto.setFileSize(filedata.getSize());
-        dto.setFileType("001001");
-        return mediaFilesService.uploadFile(companyId, dto, filedata);
+        return mediaFilesService.uploadFile(companyId, dto, filedata, objectName);
     }
 
     @ApiOperation("文件上传前的检查文件")
