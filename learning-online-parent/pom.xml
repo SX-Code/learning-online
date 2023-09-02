@@ -17,6 +17,8 @@
         <module>../learning-online-message-sdk</module>
         <module>../learning-online-search</module>
         <module>../learning-online-auth</module>
+        <module>../learning-online-checkcode</module>
+        <module>../learning-onliine-learning</module>
     </modules>
     <properties>
         <java.version>11</java.version>
@@ -32,6 +34,8 @@
         <simplemagic.version>1.17</simplemagic.version>
         <xxjob-core.version>2.3.0</xxjob-core.version>
         <ws.schild.version>3.3.1</ws.schild.version>
+        <fastjson2.version>2.0.32</fastjson2.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
     </properties>
 
     <dependencyManagement>
@@ -107,6 +111,16 @@
                 <groupId>ws.schild</groupId>
                 <artifactId>jave-all-deps</artifactId>
                 <version>${ws.schild.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

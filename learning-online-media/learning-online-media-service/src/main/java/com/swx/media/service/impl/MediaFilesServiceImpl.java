@@ -124,7 +124,13 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
 
             // 保存到数据库，使用编程式事务
             MediaFiles mediaFiles = transactionTemplate.execute(transactionStatus -> {
-                return saveAfterStore(dto, companyId, prefix, bucket, path);
+                try {
+                    return saveAfterStore(dto, companyId, prefix, bucket, path);
+                } catch (Exception e) {
+                    log.error("文件入库失败: ", e);
+                    transactionStatus.setRollbackOnly();
+                }
+                return null;
             });
 
             // 返回数据

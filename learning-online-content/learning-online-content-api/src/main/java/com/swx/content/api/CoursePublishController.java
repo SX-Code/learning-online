@@ -2,6 +2,7 @@ package com.swx.content.api;
 
 import com.swx.base.exception.ResponseResult;
 import com.swx.base.model.R;
+import com.swx.content.model.po.CoursePublish;
 import com.swx.content.service.CoursePublishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,17 @@ public class CoursePublishController {
     public void coursePublish(@PathVariable("courseId") Long courseId) {
         Long companyId = 1232141425L;
         coursePublishService.publish(companyId, courseId);
+    }
+
+    /**
+     * 其他微服务远程调用，不用授权
+     *
+     * @param courseId 课程ID
+     */
+    @ApiOperation("查询课程发布信息")
+    @GetMapping("/r/coursepublish/{courseId}")
+    public CoursePublish getCoursePublish(@PathVariable("courseId") Long courseId) {
+        return coursePublishService.getById(courseId);
     }
 
 }
