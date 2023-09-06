@@ -18,6 +18,7 @@ import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -54,11 +56,12 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
     private final MqMessageService mqMessageService;
     private final MediaServiceClient mediaServiceClient;
     private final Configuration configuration;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public CoursePublishServiceImpl(CourseBaseService courseBaseService, TeachPlanService teachPlanService,
                                     CourseMarketService courseMarketService, CourseCategoryService courseCategoryService,
                                     CoursePublishPreService coursePublishPreService, MqMessageService mqMessageService,
-                                    MediaServiceClient mediaServiceClient, Configuration configuration) {
+                                    MediaServiceClient mediaServiceClient, Configuration configuration, RedisTemplate<String, String> redisTemplate) {
         this.courseBaseService = courseBaseService;
         this.teachPlanService = teachPlanService;
         this.courseMarketService = courseMarketService;
@@ -67,6 +70,7 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         this.mqMessageService = mqMessageService;
         this.mediaServiceClient = mediaServiceClient;
         this.configuration = configuration;
+        this.redisTemplate = redisTemplate;
     }
 
     /**
@@ -124,7 +128,6 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
 
         // 查询分类信息
         List<String> list = Arrays.asList(courseBase.getSt(), courseBase.getMt());
-        String join = StringUtils.join(list, ",");
         List<CourseCategory> categories = courseCategoryService.list(Wrappers.<CourseCategory>lambdaQuery()
                 .in(CourseCategory::getId, list).last("ORDER BY FIELD(id, '" + list.get(0) + "', '" + list.get(1) + "')"));
 
@@ -219,7 +222,7 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
             StringWriter out = new StringWriter();
             // 数据模型
             HashMap<String, Object> params = new HashMap<>();
-            params.put("model", getCoursePreviewInfo(courseId));
+            params.put("model", getCoursePublish(courseId));
             // 文章内容通过freemarker生成html文件
             template.process(params, out);
             // 返回文件流
@@ -244,6 +247,62 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         if (upload == null) {
             log.debug("上传结果为null, 课程ID: {}", courseId);
         }
+    }
+
+    /**
+     * 查询已发布课程的信息
+     *
+     * @param courseId 课程ID
+     * @return com.swx.content.model.po.CoursePublish 课程发布信息
+     */
+    @Override
+    public CoursePreviewVO getCoursePublish(Long courseId) {
+        CoursePublish coursePublish = getById(courseId);
+        if (coursePublish == null) {
+            throw new BizException("课程未发布");
+        }
+        CoursePreviewVO coursePreviewVO = new CoursePreviewVO();
+
+        // 解析课程基本信息和营销信息
+        CourseBaseInfoVO courseBaseInfoVO = new CourseBaseInfoVO();
+        BeanUtils.copyProperties(coursePublish, courseBaseInfoVO);
+        coursePreviewVO.setCourseBase(courseBaseInfoVO);
+
+        // 解析课程计划信息
+        List<TeachPlanVO> teachPlans = JSON.parseArray(coursePublish.getTeachplan(), TeachPlanVO.class);
+        coursePreviewVO.setTeachplans(teachPlans);
+
+        return coursePreviewVO;
+    }
+
+    /**
+     * 查询已发布课程的信息（缓存）
+     *
+     * @param courseId 课程ID
+     * @return com.swx.content.model.po.CoursePublish 课程发布信息
+     */
+    @Override
+    public CoursePreviewVO getCoursePublishCache(Long courseId) {
+        String course = redisTemplate.opsForValue().get("course:" + courseId);
+        // 判断是否存在
+        if (StringUtils.isNotBlank(course)) {
+            // 存在
+            return JSON.parseObject(course, CoursePreviewVO.class);
+        }
+        // 不存在，可能为null或者course为 ""
+        if (course != null) {
+            // 不为null，即为""
+            return null;
+        }
+
+        // 查询数据库
+        CoursePreviewVO coursePublish = getCoursePublish(courseId);
+        if (coursePublish != null) {
+            redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish), 30, TimeUnit.MINUTES);
+        } else {
+            redisTemplate.opsForValue().set("course:" + courseId, "", 20, TimeUnit.SECONDS);
+        }
+        return coursePublish;
     }
 
     /**

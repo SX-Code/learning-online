@@ -3,7 +3,6 @@ package com.swx.content.client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 降级方法，可以拿到异常信息

@@ -47,6 +47,7 @@ public class GlobalExceptionHandler {
         if (e.getMessage().equals("不允许访问")) {
             return ErrorResult.fail(ResultCodeEnum.NO_OPERATOR_AUTH, e);
         }
+
         return ErrorResult.fail(ResultCodeEnum.SERVER_ERROR, e);
     }
 

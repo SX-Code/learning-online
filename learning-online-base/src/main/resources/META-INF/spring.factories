@@ -1,5 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.swx.base.config.LocalDateTimeConfig, \
+  com.swx.base.config.JSONConvertConfig, \
   com.swx.base.config.Knife4jConfiguration, \
   com.swx.base.config.WebAppConfig, \
   com.swx.base.exception.GlobalExceptionHandler, \

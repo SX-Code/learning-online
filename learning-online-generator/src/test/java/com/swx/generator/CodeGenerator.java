@@ -33,7 +33,7 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql:///lo_user?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8&nullCatalogMeansCurrent=true");
+        dsc.setUrl("jdbc:mysql:///lo_orders?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8&nullCatalogMeansCurrent=true");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
@@ -42,7 +42,7 @@ public class CodeGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.swx.ucenter");
+        pc.setParent("com.swx.orders");
         pc.setEntity("model.po");
         pc.setMapper("mapper");
         pc.setService("service");
@@ -51,7 +51,7 @@ public class CodeGenerator {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("xc_company", "xc_company_user", "xc_menu", "xc_permission", "xc_role", "xc_teacher", "xc_user", "xc_user_role");
+        strategy.setInclude("xc_orders", "xc_orders_goods", "xc_pay_record");
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);

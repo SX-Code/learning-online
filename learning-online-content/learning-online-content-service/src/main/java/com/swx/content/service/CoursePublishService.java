@@ -56,4 +56,20 @@ public interface CoursePublishService extends IService<CoursePublish> {
      * @param inputStream 文件流
      */
     public void uploadCourseHtml(Long courseId, InputStream inputStream);
+
+    /**
+     * 查询已发布课程的信息
+     *
+     * @param courseId 课程ID
+     * @return com.swx.content.model.po.CoursePublish 课程发布信息
+     */
+    public CoursePreviewVO getCoursePublish(Long courseId);
+
+    /**
+     * 查询已发布课程的信息（缓存）
+     *
+     * @param courseId 课程ID
+     * @return com.swx.content.model.po.CoursePublish 课程发布信息
+     */
+    public CoursePreviewVO getCoursePublishCache(Long courseId);
 }

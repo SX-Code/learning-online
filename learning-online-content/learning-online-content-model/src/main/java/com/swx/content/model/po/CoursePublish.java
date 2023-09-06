@@ -2,10 +2,14 @@ package com.swx.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -135,20 +139,23 @@ public class CoursePublish implements Serializable {
     /**
      * 发布时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("create_date")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     /**
      * 上架时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("online_date")
-    private Date onlineDate;
+    private LocalDateTime onlineDate;
 
     /**
      * 下架时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("offline_date")
-    private Date offlineDate;
+    private LocalDateTime offlineDate;
 
     /**
      * 发布状态

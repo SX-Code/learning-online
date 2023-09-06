@@ -27,5 +27,8 @@ spring:
           - data-id: feign-${spring.profiles.active}.yaml
             group: learning-online-common
             refresh: true
+          - data-id: redis-${spring.profiles.active}.yaml
+            group: learning-online-common
+            refresh: true
   profiles:
     active: dev

@@ -18,7 +18,8 @@
         <module>../learning-online-search</module>
         <module>../learning-online-auth</module>
         <module>../learning-online-checkcode</module>
-        <module>../learning-onliine-learning</module>
+        <module>../learning-online-learning</module>
+        <module>../learning-online-orders</module>
     </modules>
     <properties>
         <java.version>11</java.version>

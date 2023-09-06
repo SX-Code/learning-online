@@ -1,5 +1,6 @@
 package com.swx.content.api;
 
+import com.swx.base.exception.ResponseResult;
 import com.swx.content.model.vo.CoursePreviewVO;
 import com.swx.content.service.CoursePublishService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 
+@ResponseResult
 @RestController
 @RequestMapping("/open")
 public class CourseOpenController {

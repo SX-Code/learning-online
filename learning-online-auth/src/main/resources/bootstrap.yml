@@ -17,5 +17,8 @@ spring:
           - data-id: logging-${spring.profiles.active}.yaml
             group: learning-online-common
             refresh: true
+          - data-id: feign-${spring.profiles.active}.yaml
+            group: learning-online-common
+            refresh: true
   profiles:
     active: dev
