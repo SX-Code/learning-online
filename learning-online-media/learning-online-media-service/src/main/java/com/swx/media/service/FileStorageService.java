@@ -19,6 +19,15 @@ public interface FileStorageService {
     public Map<String, String> uploadMediaFile(String prefix, String filename, String mineType, InputStream inputStream);
 
     /**
+     * 上传文件
+     *
+     * @param objectName  文件路径
+     * @param inputStream 文件流
+     * @return 桶和文件全路径
+     */
+    public Map<String, String> uploadMediaFile(String objectName, String mineType, InputStream inputStream);
+
+    /**
      * 上传图片文件
      *
      * @param objectName  MinIO文件名

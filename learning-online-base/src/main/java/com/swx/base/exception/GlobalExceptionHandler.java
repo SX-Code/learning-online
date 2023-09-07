@@ -43,6 +43,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public ErrorResult handlerThrowable(Throwable e, HttpServletRequest request) {
         logger.error("发生未知异常！原因是: ", e);
+        // 使用这种方式，而不是拦截AccessDeniedException异常，可引入Spring Security防止污染工程
+        if (e.getMessage().equals("不允许访问")) {
+            return ErrorResult.fail(ResultCodeEnum.NO_OPERATOR_AUTH, e);
+        }
+
         return ErrorResult.fail(ResultCodeEnum.SERVER_ERROR, e);
     }
 

@@ -2,6 +2,8 @@ package com.swx.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -27,7 +29,7 @@ public class CoursePublishPre implements Serializable {
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id")
     private Long id;
 
     /**
@@ -136,13 +138,13 @@ public class CoursePublishPre implements Serializable {
      * 提交时间
      */
     @TableField("create_date")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     /**
      * 审核时间
      */
     @TableField("audit_date")
-    private Date auditDate;
+    private LocalDateTime auditDate;
 
     /**
      * 状态

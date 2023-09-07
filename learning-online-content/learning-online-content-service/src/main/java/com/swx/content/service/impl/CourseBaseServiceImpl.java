@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * <p>
@@ -48,15 +49,17 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     /**
      * 课程分页查询
      *
+     * @param companyId 培训结构ID
      * @param pageParam 分页参数
      * @param dto       查询参数
      */
     @Override
-    public PageResult<CourseBase> queryCourseBaseList(PageParam pageParam, QueryCourseParamsDTO dto) {
+    public PageResult<CourseBase> queryCourseBaseList(Long companyId, PageParam pageParam, QueryCourseParamsDTO dto) {
         LambdaQueryWrapper<CourseBase> wrapper = Wrappers.<CourseBase>lambdaQuery()
                 .like(StringUtils.hasText(dto.getCourseName()), CourseBase::getName, dto.getCourseName())
                 .eq(StringUtils.hasText(dto.getAuditStatus()), CourseBase::getAuditStatus, dto.getAuditStatus())
-                .eq(StringUtils.hasText(dto.getPublishStatus()), CourseBase::getStatus, dto.getPublishStatus());
+                .eq(StringUtils.hasText(dto.getPublishStatus()), CourseBase::getStatus, dto.getPublishStatus())
+                .eq(companyId != null, CourseBase::getCompanyId, companyId);
 
         Page<CourseBase> page = new Page<>(pageParam.getPageNo(), pageParam.getPageSize());
         Page<CourseBase> pageResult = page(page, wrapper);
@@ -112,10 +115,10 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
             return null;
         }
         // 查询营销信息
-        CourseMarket courseMarket = courseMarketService.getById(courseId);
+        CourseMarket courseMarket = Optional.ofNullable(courseMarketService.getById(courseId)).orElse(new CourseMarket());
         CourseBaseInfoVO courseBaseInfoVO = new CourseBaseInfoVO();
-        BeanUtils.copyProperties(courseBase, courseBaseInfoVO);
         BeanUtils.copyProperties(courseMarket, courseBaseInfoVO);
+        BeanUtils.copyProperties(courseBase, courseBaseInfoVO);
 
         // 查询分类信息
         CourseCategory mtCategory = courseCategoryService.getById(courseBase.getMt());

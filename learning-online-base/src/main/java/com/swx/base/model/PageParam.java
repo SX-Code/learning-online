@@ -25,4 +25,5 @@ public class PageParam {
         this.pageNo = pageNo;
         this.pageSize = pageSize;
     }
+
 }

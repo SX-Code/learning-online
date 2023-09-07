@@ -63,7 +63,6 @@ public class VideoTask {
             // 将任务加入线程池
             executorService.execute(() -> {
                 try {
-
                     // 获取任务锁
                     Long taskId = mediaProcess.getId();
                     boolean lock = mediaProcessService.startTask(taskId);

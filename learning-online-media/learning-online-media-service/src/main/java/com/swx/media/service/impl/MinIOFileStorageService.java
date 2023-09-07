@@ -59,7 +59,7 @@ public class MinIOFileStorageService implements FileStorageService {
     }
 
     /**
-     * 上传图片文件
+     * 上传文件
      *
      * @param prefix      文件前缀
      * @param filename    文件名
@@ -69,19 +69,46 @@ public class MinIOFileStorageService implements FileStorageService {
     @Override
     public Map<String, String> uploadMediaFile(String prefix, String filename, String mineType, InputStream inputStream) {
         String filepath = builderFilePath(prefix, filename);
+        String bucket = upload2Files(filepath, mineType, inputStream);
+        Map<String, String> map = new HashMap<>();
+        map.put("path", filepath);
+        map.put("bucket", bucket);
+        return map;
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param objectName  文件路径
+     * @param inputStream 文件流
+     * @return 桶和文件全路径
+     */
+    @Override
+    public Map<String, String> uploadMediaFile(String objectName, String mineType, InputStream inputStream) {
+        String bucket = upload2Files(objectName, mineType, inputStream);
+        Map<String, String> map = new HashMap<>();
+        map.put("path", objectName);
+        map.put("bucket", bucket);
+        return map;
+    }
+
+    /**
+     * 上传到 files 桶
+     *
+     * @param objectName 路径
+     * @return 桶
+     */
+    private String upload2Files(String objectName, String mineType, InputStream inputStream) {
         String bucket = minIOConfigProperties.getBucket().get("files");
         try {
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
-                    .object(filepath)
+                    .object(objectName)
                     .contentType(mineType)
                     .bucket(bucket)
                     .stream(inputStream, inputStream.available(), -1)
                     .build();
             minioClient.putObject(putObjectArgs);
-            Map<String, String> map = new HashMap<>();
-            map.put("path", filepath);
-            map.put("bucket", bucket);
-            return map;
+            return bucket;
         } catch (Exception ex) {
             log.error("minio put file error.", ex);
             throw new RuntimeException("上传文件失败");

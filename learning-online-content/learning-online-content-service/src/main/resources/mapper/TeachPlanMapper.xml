@@ -23,6 +23,7 @@
             <result column="two_orderby" property="orderby" />
             <result column="two_courseId" property="courseId" />
             <result column="two_coursePubId" property="coursePubId" />
+            <result column="two_isPreview" property="isPreview" />
             <!-- 映射子节点，一对一映射 -->
             <association property="teachplanMedia" javaType="com.swx.content.model.po.TeachPlanMedia">
                 <id column="teachPlanMediaId" property="id" />
@@ -51,6 +52,7 @@
                two.end_time      two_endTime,
                two.orderby       two_orderby,
                two.course_id     two_courseId,
+               two.is_preview    two_isPreview,
                two.course_pub_id two_coursePubId,
                tm.media_fileName mediaFilename,
                tm.id             teachPlanMediaId,

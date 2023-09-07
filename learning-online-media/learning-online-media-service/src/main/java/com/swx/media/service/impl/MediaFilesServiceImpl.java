@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -86,11 +87,11 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
      * @param companyId     机构ID
      * @param dto           文件信息
      * @param multipartFile 文件信息
+     * @param objectName    文件路径
      * @return UploadFileResultVO
      */
     @Override
-    public UploadFileResultVO uploadFile(Long companyId, UploadFileParamDTO dto, MultipartFile multipartFile) {
-
+    public UploadFileResultVO uploadFile(Long companyId, UploadFileParamDTO dto, MultipartFile multipartFile, String objectName) {
         String filename = dto.getFilename();
         String suffix = filename.substring(filename.lastIndexOf("."));
         try {
@@ -102,15 +103,34 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
                 BeanUtils.copyProperties(dbMediaFile, resultVO);
                 return resultVO;
             }
-            // 上传到MinIO
+
+            // 获取文章类型
             String mineType = getMineType(suffix);
-            Map<String, String> result = fileStorageService.uploadMediaFile("", prefix + suffix, mineType, multipartFile.getInputStream());
+            if (mineType.contains("image")) {
+                dto.setFileType("001001");
+            } else {
+                dto.setFileType("001003");
+            }
+
+            // 上传到MinIO
+            Map<String, String> result = null;
+            if (StringUtils.hasText(objectName)) {
+                result = fileStorageService.uploadMediaFile(objectName, mineType, multipartFile.getInputStream());
+            } else {
+                result = fileStorageService.uploadMediaFile("", prefix + suffix, mineType, multipartFile.getInputStream());
+            }
             String bucket = result.get("bucket");
             String path = result.get("path");
 
             // 保存到数据库，使用编程式事务
             MediaFiles mediaFiles = transactionTemplate.execute(transactionStatus -> {
-                return saveAfterStore(dto, companyId, prefix, bucket, path);
+                try {
+                    return saveAfterStore(dto, companyId, prefix, bucket, path);
+                } catch (Exception e) {
+                    log.error("文件入库失败: ", e);
+                    transactionStatus.setRollbackOnly();
+                }
+                return null;
             });
 
             // 返回数据

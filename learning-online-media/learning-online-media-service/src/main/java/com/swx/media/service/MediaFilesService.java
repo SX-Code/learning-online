@@ -36,16 +36,11 @@ public interface MediaFilesService extends IService<MediaFiles> {
      * @param companyId     机构ID
      * @param dto           文件信息
      * @param multipartFile 文件信息
+     * @param objectName    文件路径
      * @return UploadFileResultVO
      */
-    public UploadFileResultVO uploadFile(Long companyId, UploadFileParamDTO dto, MultipartFile multipartFile);
+    public UploadFileResultVO uploadFile(Long companyId, UploadFileParamDTO dto, MultipartFile multipartFile, String objectName);
 
-    /**
-     * 从dto保存到数据库
-     *
-     * @param dto 文件信息
-     * @return 保是否保存成功
-     */
     /**
      * 上传到MinIO之后保存到数据库
      *
@@ -90,7 +85,7 @@ public interface MediaFilesService extends IService<MediaFiles> {
      * @param companyId  机构ID
      * @param fileMd5    文件md5
      * @param chunkTotal 分块数量
-     * @param dto   文件信息
+     * @param dto        文件信息
      */
     R mergeChunks(Long companyId, String fileMd5, int chunkTotal, UploadFileParamDTO dto);
 }
