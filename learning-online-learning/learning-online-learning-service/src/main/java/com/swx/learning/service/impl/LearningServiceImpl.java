@@ -41,7 +41,6 @@ public class LearningServiceImpl implements LearningService {
         // TODO 判断该视频视频所在课程小节是否支持试学
 
 
-
         if (StringUtils.isEmpty(userId)) {
             // 用户未登录
             if (coursePublish.getCharge().equals("201000")) {

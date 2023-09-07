@@ -134,7 +134,6 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         Page<XcCourseTables> iPage = new Page<>(pageNo, size);
         Page<XcCourseTables> pageResult = xcCourseTablesService.page(iPage, Wrappers.<XcCourseTables>lambdaQuery()
                 .eq(XcCourseTables::getUserId, userId));
-
         return new PageResult<>(pageResult.getRecords(), pageResult.getTotal(), pageNo, size);
     }
 }

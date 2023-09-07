@@ -167,7 +167,6 @@ public class OrderServiceImpl implements OrderService {
         MqMessage mqMessage = mqMessageService.addMessage("pay_result_notify", xcOrder.getOutBusinessId(), xcOrder.getOrderType(), null);
         // 发送消息
         notifyPayResult(mqMessage);
-
     }
 
     /**
